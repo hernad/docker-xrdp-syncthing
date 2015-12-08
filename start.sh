@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SYNCTHING_USER=syncthing
+SYNCTHING_USER=dockerx
 
 # if this if the first run, generate a useful config
 [ -f /home/$SYNCTHING_USER/syncthing/config/config.xml ] && exit 0

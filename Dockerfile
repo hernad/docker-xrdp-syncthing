@@ -2,12 +2,14 @@ FROM hernad/neutrino-xrdp
 
 MAINTAINER Ernad Husremovic hernad@bring.out.ba
 
-ENV SYNCTHING_USER syncthing
-ENV UID 22000
+
+RUN useradd --shell /bin/bash -m -G sudo,users,adm dockerx
+RUN echo "dockerx:dockerx" | chpasswd
+
+
+ENV SYNCTHING_USER dockerx
 
 RUN apt-get update -y && apt-get install -y supervisor
-
-RUN useradd --no-create-home -g users --uid $UID $SYNCTHING_USER
 
 ENV SYNCTHING_VER 0.12.7
 # https://github.com/syncthing/syncthing/releases/download/v0.12.7/syncthing-linux-amd64-v0.12.7.tar.gz
@@ -24,11 +26,6 @@ RUN cd /tmp && curl -LO https://github.com/syncthing/syncthing/releases/download
 RUN echo "[supervisord]" > /etc/supervisord.conf &&\
     echo "nodaemon=true" >> /etc/supervisord.conf
 
-#    echo "[program:xrdp]" >> /etc/supervisord.conf &&\
-#    echo "command=/etc/init.d/xrdp.sh start" >> /etc/supervisord.conf &&\
-#    echo "user=root" >> /etc/supervisord.conf &&\
-#    echo "directory=/root" >> /etc/supervisord.conf
-
 RUN echo "[program:syncthing]" >> /etc/supervisord.conf && \
     echo "command=/home/$SYNCTHING_USER/bin/syncthing -no-browser -home=\"/home/$SYNCTHING_USER/syncthing/config\"" >> /etc/supervisord.conf && \
     echo "directory=/home/$SYNCTHING_USER" >> /etc/supervisord.conf && \
@@ -41,10 +38,6 @@ ADD start.sh /
 EXPOSE 3389
 EXPOSE 8080
 
-# add our user
-RUN useradd -m -G sudo,users dockerx
-RUN echo "dockerx:dockerx" | chpasswd
-
-ADD xrdp.ini /etc/xrdp/
-ADD .xinitrc /home/dockerx/
-CMD ["bash", "-c", "/etc/init.d/xrdp.sh start ; /start.sh ; /usr/bin/supervisord"]
+#ADD xrdp.ini /etc/xrdp/
+#ADD .xinitrc /home/dockerx/
+CMD ["bash", "-c", "/etc/init.d/dbus start ; /etc/init.d/xrdp.sh start ; /start.sh ; /usr/bin/supervisord"]
