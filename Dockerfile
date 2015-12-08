@@ -19,15 +19,27 @@ RUN cd /tmp && curl -LO https://github.com/syncthing/syncthing/releases/download
   rm -rf syncthing-linux-*.tar.gz syncthing-linux-*
   
 
-RUN echo "[supervisord]" > /etc/supervisord.conf &&\
-    echo "nodaemon=true" >> /etc/supervisord.conf
+ENV SUPER_F  /etc/supervisord.conf
 
-RUN echo "[program:syncthing]" >> /etc/supervisord.conf && \
-    echo "command=/syncthing/bin/syncthing -no-browser -home=\"/syncthing/config\"" >> /etc/supervisord.conf && \
-    echo "directory=/syncthing" >> /etc/supervisord.conf && \
-    echo "autorestart=True" >> /etc/supervisord.conf && \
-    echo "user=$SYNCTHING_USER" >> /etc/supervisord.conf && \
-    echo "environment=STNORESTART=\"1\", HOME=\"/syncthing\"" >> /etc/supervisord.conf
+RUN echo "[supervisord]" > $SUPER_F &&\
+    echo "nodaemon=true" >> $SUPER_F
+
+RUN echo "[program:syncthing]" >> $SUPER_F && \
+    echo "command=/syncthing/bin/syncthing -no-browser -home=\"/syncthing/config\"" >> $SUPER_F && \
+    echo "directory=/syncthing" >> $SUPER_F && \
+    echo "autorestart=True" >> $SUPER_F && \
+    echo "user=$SYNCTHING_USER" >> $SUPER_F && \
+    echo "environment=STNORESTART=\"1\", HOME=\"/syncthing\"" >> $SUPER_F &&\
+    echo "[program:xrdp]" >> $SUPER_F &&\
+    echo "priority=10" >> $SUPER_F &&\
+    echo "directory=/" >> $SUPER_F &&\
+    echo "command=/etc/init.d/xrdp.sh start" >> $SUPER_F &&\
+    echo "user=root" >> $SUPER_F &&\
+    echo "autostart=true" >> $SUPER_F && \
+    echo "autorestart=true" >> $SUPER_F && \
+    echo "stopsignal=QUIT" >> $SUPER_F && \
+    echo "redirect_stderr=true" >> $SUPER_F
+
 
 ADD start.sh /
 
@@ -36,4 +48,4 @@ EXPOSE 8080
 
 #ADD xrdp.ini /etc/xrdp/
 #ADD .xinitrc /home/dockerx/
-CMD ["bash", "-c", "/etc/init.d/dbus start ; /etc/init.d/xrdp.sh start ; /start.sh ; /usr/bin/supervisord"]
+CMD ["bash", "-c", "/etc/init.d/dbus start ; /start.sh ; /usr/bin/supervisord"]
