@@ -2,6 +2,8 @@
 
 SYNCTHING_USER=dockerx
 
+chown -R $SYNCTHING_USER:$SUNCTHING_USER /home/$SYNCTHING_USER
+
 # if this if the first run, generate a useful config
 [ -f /syncthing/config/config.xml ] && exit 0
 
