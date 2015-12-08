@@ -5,7 +5,7 @@ CT=xrdp-syncthing
 
 docker rm -f $CT
 docker run -d \
-    -p 8384:8384 -p 3389:3389 \
+    -p 8080:8080 -p 3389:3389 \
     --name $CT \
     $IMG
 
