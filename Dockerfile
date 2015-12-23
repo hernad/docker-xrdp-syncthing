@@ -7,7 +7,7 @@ ENV SYNCTHING_USER dockerx
 
 RUN apt-get update -y && apt-get install -y supervisor
 
-ENV SYNCTHING_VER 0.12.7
+ENV SYNCTHING_VER 0.12.9
 # https://github.com/syncthing/syncthing/releases/download/v0.12.7/syncthing-linux-amd64-v0.12.7.tar.gz
 RUN cd /tmp && curl -LO https://github.com/syncthing/syncthing/releases/download/v${SYNCTHING_VER}/syncthing-linux-amd64-v${SYNCTHING_VER}.tar.gz &&\
   ls -lh syncthing*.tar.gz && \
