@@ -5,7 +5,9 @@ MAINTAINER Ernad Husremovic hernad@bring.out.ba
 
 ENV SYNCTHING_USER dockerx
 
-RUN apt-get update -y && apt-get install -y supervisor cups cups-pdf system-config-printer-gnome
+RUN apt-get update -y &&\
+    apt-get install -y supervisor cups cups-pdf system-config-printer-gnome &&\
+    apt-get clean
 
 ENV SYNCTHING_VER 0.12.9
 # https://github.com/syncthing/syncthing/releases/download/v0.12.7/syncthing-linux-amd64-v0.12.7.tar.gz
