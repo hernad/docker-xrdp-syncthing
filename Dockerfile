@@ -5,7 +5,7 @@ MAINTAINER Ernad Husremovic hernad@bring.out.ba
 
 ENV SYNCTHING_USER dockerx
 
-RUN apt-get update -y && apt-get install -y supervisor
+RUN apt-get update -y && apt-get install -y supervisor cups cups-pdf system-config-printer-gnome
 
 ENV SYNCTHING_VER 0.12.9
 # https://github.com/syncthing/syncthing/releases/download/v0.12.7/syncthing-linux-amd64-v0.12.7.tar.gz
@@ -44,8 +44,7 @@ RUN echo "[program:syncthing]" >> $SUPER_F && \
 ADD start.sh /
 
 EXPOSE 3389
-EXPOSE 8080
 
 #ADD xrdp.ini /etc/xrdp/
 #ADD .xinitrc /home/dockerx/
-CMD ["bash", "-c", "/etc/init.d/dbus start ; /start.sh ; /usr/bin/supervisord"]
+CMD ["bash", "-c", "/etc/init.d/dbus start ; /etc/init.d/cups start ; /start.sh ; /usr/bin/supervisord"]
